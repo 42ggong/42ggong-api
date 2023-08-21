@@ -1,0 +1,18 @@
+package hdj.ggong.domain;
+
+import hdj.ggong.common.Role;
+import jakarta.persistence.*;
+
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "role")
+    private Role role;
+}
