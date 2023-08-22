@@ -1,4 +1,4 @@
-package hdj.ggongapi;
+package hdj.ggong;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
