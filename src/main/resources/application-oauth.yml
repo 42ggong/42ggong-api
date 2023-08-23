@@ -1,0 +1,18 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          ft:
+            client-id: ${FT_CLIENT_ID}
+            client-secret: ${FT_CLIENT_SECRET}
+            redirect-uri: ${FT_REDIRECT_URI}
+            authorization_grant_type: authorization_code
+            scope: public
+            client-name: ft
+        provider:
+          ft:
+            authorization_uri: https://api.intra.42.fr/oauth/authorize # Get
+            token_uri: https://api.intra.42.fr/oauth/token # Post
+            user-info-uri: https://api.intra.42.fr/v2/me # Get
+            user_name_attribute: login
