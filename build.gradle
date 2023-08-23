@@ -22,6 +22,9 @@ repositories {
 }
 
 dependencies {
+	// Spring Security - OAuth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 	// DB
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
@@ -30,7 +33,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
-	// Spring
+	// Spring Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
