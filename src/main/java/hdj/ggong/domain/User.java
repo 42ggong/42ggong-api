@@ -2,7 +2,12 @@ package hdj.ggong.domain;
 
 import hdj.ggong.common.Role;
 import jakarta.persistence.*;
+import lombok.*;
 
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User {
 
@@ -15,4 +20,5 @@ public class User {
 
     @Column(name = "role")
     private Role role;
+
 }
