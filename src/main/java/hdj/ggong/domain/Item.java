@@ -22,6 +22,7 @@ public class Item {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "keep_status")
     private KeepStatus keepStatus;
 
