@@ -3,7 +3,7 @@ package hdj.ggong.security;
 import hdj.ggong.domain.User;
 import hdj.ggong.mapper.UserMapper;
 import hdj.ggong.repository.UserRepository;
-import hdj.ggong.security.jwt.JwtTokenProvider;
+import hdj.ggong.security.jwt.JwtProvider;
 import hdj.ggong.security.oauth2.OAuth2UserProfile;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -37,6 +37,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .build();
         User user = userRepository.findByUsername(oAuth2UserProfile.getUsername())
                 .orElseGet(() -> userRepository.save(userMapper.userOAuth2ProfileToUser(oAuth2UserProfile)));
+
+        String accessToken = jwtProvider.generateAccessTokenByUser(user);
+        String refreshToken = jwtProvider.generateRefreshTokenByUser(user);
         response.sendRedirect("/");
     }
 }
