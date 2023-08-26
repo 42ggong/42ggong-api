@@ -52,7 +52,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(body));
 
-        Cookie refreshCookie = cookieUtils.getRefreshTokenCookie("refresh", refreshToken);
+        Cookie refreshCookie = cookieUtils.getRefreshTokenCookie("refreshToken", refreshToken);
         response.addCookie(refreshCookie);
     }
 }
