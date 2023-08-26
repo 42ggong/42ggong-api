@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UserMapper {
 
-    public User userOAuthProfileToUser(OAuth2UserProfile OAuth2UserProfile) {
+    public User userOAuth2ProfileToUser(OAuth2UserProfile oAuth2UserProfile) {
         return User.builder()
-                .username(OAuth2UserProfile.getUsername())
+                .username(oAuth2UserProfile.getUsername())
                 .role(Role.ROLE_USER)
                 .build();
     }
