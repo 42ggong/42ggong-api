@@ -1,5 +1,6 @@
 package hdj.ggong.security;
 
+import hdj.ggong.security.jwt.JwtAuthenticationFilter;
 import hdj.ggong.security.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -24,6 +27,7 @@ public class SecurityConfiguration {
     private final OAuth2Service oAuth2Service;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,6 +47,8 @@ public class SecurityConfiguration {
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                 );
+        http
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
