@@ -8,8 +8,8 @@ JAR_FILE=${JAR_DIR}/${JAR_NAME}-${JAR_VERSION}-SNAPSHOT.jar
 # Server
 .PHONY: start
 start:
-	@make restart_db
-	@make build
+	@make clean
+	@make start_db
 	bash -c "source .env && java -jar ${JAR_FILE}"
 
 .PHONY: clean
