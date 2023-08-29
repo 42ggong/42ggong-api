@@ -1,12 +1,10 @@
 package hdj.ggong.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hdj.ggong.domain.User;
 import hdj.ggong.mapper.UserMapper;
 import hdj.ggong.repository.UserRepository;
 import hdj.ggong.security.jwt.CookieUtils;
 import hdj.ggong.security.jwt.JwtProvider;
-import hdj.ggong.security.jwt.JwtResponseBody;
 import hdj.ggong.security.oauth2.OAuth2UserProfile;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -45,14 +43,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         String accessToken = jwtProvider.generateAccessTokenByUser(user);
         String refreshToken = jwtProvider.generateRefreshTokenByUser(user);
-
-        JwtResponseBody body = JwtResponseBody.builder()
-                .accessToken(accessToken)
-                .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        response.getWriter().write(objectMapper.writeValueAsString(body));
-
-        Cookie refreshCookie = cookieUtils.getRefreshTokenCookie("refreshToken", refreshToken);
+        Cookie accessCookie = cookieUtils.generateAccessCookie("accessToken", accessToken);
+        Cookie refreshCookie = cookieUtils.generateRefreshCookie("refreshToken", refreshToken);
+        response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
+        response.sendRedirect("http://localhost:3000"); // TODO: 하드 코딩. oauth2 로그인 요청한 uri
     }
 }
