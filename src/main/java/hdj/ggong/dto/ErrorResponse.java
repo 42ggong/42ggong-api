@@ -1,7 +1,5 @@
 package hdj.ggong.dto;
 
-import hdj.ggong.common.ErrorCode;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.Builder;
 import lombok.Getter;
 

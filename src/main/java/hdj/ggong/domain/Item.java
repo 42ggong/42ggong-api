@@ -1,6 +1,6 @@
 package hdj.ggong.domain;
 
-import hdj.ggong.common.KeepStatus;
+import hdj.ggong.common.enums.KeepStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

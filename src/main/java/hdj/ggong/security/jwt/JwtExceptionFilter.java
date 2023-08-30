@@ -1,8 +1,7 @@
 package hdj.ggong.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import hdj.ggong.common.ErrorCode;
+import hdj.ggong.common.enums.ErrorCode;
 import hdj.ggong.dto.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,11 +1,10 @@
 package hdj.ggong.security.oauth2;
 
-import hdj.ggong.common.Role;
+import hdj.ggong.common.enums.Role;
 import hdj.ggong.domain.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Builder
 @Getter
