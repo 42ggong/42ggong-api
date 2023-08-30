@@ -39,7 +39,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .username((String) attributes.get("login"))
                 .build();
         User user = userRepository.findByUsername(oAuth2UserProfile.getUsername())
-                .orElseGet(() -> userRepository.save(userMapper.userOAuth2ProfileToUser(oAuth2UserProfile)));
+                .orElseGet(() -> userRepository.save(oAuth2UserProfile.toUser()));
 
         String accessToken = jwtProvider.generateAccessTokenByUser(user);
         String refreshToken = jwtProvider.generateRefreshTokenByUser(user);
