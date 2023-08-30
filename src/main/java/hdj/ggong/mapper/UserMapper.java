@@ -12,6 +12,9 @@ public class UserMapper {
         return User.builder()
                 .username(oAuth2UserProfile.getUsername())
                 .role(Role.ROLE_USER)
+                .benefitPoint(0L)
+                .isAccountNonPenalty(false)
+                .isAccountNonLocked(false)
                 .build();
     }
 }
