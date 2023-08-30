@@ -4,6 +4,7 @@ import hdj.ggong.domain.Item;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.security.CustomUserDetails;
 import hdj.ggong.service.ItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +20,7 @@ public class ItemController {
     @PostMapping("/items")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Item createItem(@AuthenticationPrincipal CustomUserDetails userDetails,
-                           @RequestBody CreateItemRequest createItemRequest) {
+                           @Valid @RequestBody CreateItemRequest createItemRequest) {
         return itemService.createItem(userDetails, createItemRequest);
     }
 }
