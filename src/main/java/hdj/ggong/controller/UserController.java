@@ -18,8 +18,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/users/me")
     UserInfoResponse getUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return userService.getUserInfo(userDetails);
     }
+
 }
