@@ -1,6 +1,7 @@
 package hdj.ggong.security;
 
 import hdj.ggong.security.jwt.JwtAuthenticationFilter;
+import hdj.ggong.security.jwt.JwtExceptionFilter;
 import hdj.ggong.security.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ public class SecurityConfiguration {
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,14 +47,19 @@ public class SecurityConfiguration {
                         )
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                );
+        http
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/authorization/ft").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 );
+
         return http.build();
     }
 
