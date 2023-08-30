@@ -31,4 +31,16 @@ public class User {
     @Column(name = "is_account_non_locked")
     private boolean isAccountNonLocked;
 
+    public void givenPenalty() {
+        this.isAccountNonPenalty = false;
+    }
+
+    public void lock() {
+        this.isAccountNonPenalty = true;
+        this.isAccountNonLocked = false;
+    }
+
+    public void unlock() {
+        this.isAccountNonPenalty = true;
+    }
 }

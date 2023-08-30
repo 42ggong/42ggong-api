@@ -18,11 +18,15 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
+    public Long getId() {
+        return user.getId();
+    }
+
     public String getRole() {
         return user.getRole().getRoleName();
     }
 
-    public boolean getIsAccountNonPenalty() {
+    public boolean isAccountNonPenalty() {
         return user.isAccountNonPenalty();
     }
 
@@ -83,4 +87,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
 }
