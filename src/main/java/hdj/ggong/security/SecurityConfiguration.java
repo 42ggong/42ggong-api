@@ -55,8 +55,11 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/authorization/ft").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 );
+
         return http.build();
     }
 
