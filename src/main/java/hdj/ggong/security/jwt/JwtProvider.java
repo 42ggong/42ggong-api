@@ -1,15 +1,20 @@
 package hdj.ggong.security.jwt;
 
 import hdj.ggong.domain.User;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+@Slf4j
 @Component
 public class JwtProvider {
 
@@ -34,7 +39,7 @@ public class JwtProvider {
         Long expiryMinutes = this.accessTokenExpiryMinutes;
         return Jwts.builder()
                 .setIssuedAt(currentDate)
-                .setExpiration(getExpiryDate(currentDate,  expiryMinutes))
+                .setExpiration(getExpiryDate(currentDate, expiryMinutes))
                 .setSubject(user.getUsername())
                 .claim("role", user.getRole().getRoleName())
                 .signWith(secretKey)
@@ -50,6 +55,36 @@ public class JwtProvider {
                 .setSubject(user.getUsername())
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public String getBearerTokenFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (!authorizationHeader.contains("Bearer ")) {
+            log.error("Not bearer authentication");
+            return "";
+        }
+        return authorizationHeader.substring(6).trim();
+    }
+
+    public Boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException jwtException) {
+            log.error("JWS Exception: " + jwtException);
+            return false;
+        }
+    }
+
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody().getSubject();
     }
 
     private Date getCurrentDate() {
