@@ -22,6 +22,10 @@ public class CustomUserDetails implements UserDetails {
         return user.getRole().getRoleName();
     }
 
+    public boolean getIsAccountNonPenalty() {
+        return user.isAccountNonPenalty();
+    }
+
     /*
      * 해당 유저의 권한 목록
      * */
@@ -42,6 +46,8 @@ public class CustomUserDetails implements UserDetails {
 
     /*
      * 계정 만료 여부
+     * true: 만료 안됨
+     * false: 만료됨
      * */
     @Override
     public boolean isAccountNonExpired() {
@@ -50,14 +56,18 @@ public class CustomUserDetails implements UserDetails {
 
     /*
      * 계정 잠김 여부
+     * true: 잠기지 않음
+     * false: 잠김
      * */
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return user.isAccountNonLocked();
     }
 
     /*
      * 비밀번호 만료 여부
+     * true: 만료 안됨
+     * false: 만료됨
      * */
     @Override
     public boolean isCredentialsNonExpired() {
@@ -66,6 +76,8 @@ public class CustomUserDetails implements UserDetails {
 
     /*
      * 사용자 활성화 여부
+     * true: 활성화
+     * false: 비활성화
      * */
     @Override
     public boolean isEnabled() {
