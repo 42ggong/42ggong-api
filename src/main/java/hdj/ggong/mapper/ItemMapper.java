@@ -5,6 +5,7 @@ import hdj.ggong.common.utils.TimeUtil;
 import hdj.ggong.domain.Item;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
+import hdj.ggong.dto.item.CreateItemResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +15,14 @@ public class ItemMapper {
 
     private final TimeUtil timeUtil;
 
-    public Item createItemRequestToItem(User user, CreateItemRequest itemRequest) {
+    public Item createItemRequestToItem(User user, CreateItemRequest itemRequest, String keepIdentifier) {
         return Item.builder()
                 .user(user)
-                .keepIdentifier(generateKeepIdentifier())
+                .keepIdentifier(keepIdentifier)
                 .description(itemRequest.getDescription())
                 .keepStatus(KeepStatus.STATUS_KEEP)
                 .createAt(timeUtil.getCurrentDate())
                 .build();
-    }
-
-    private String generateKeepIdentifier() {
-        // TODO: 6자 랜덤 문자열 생성
-        return "";
     }
 
 }
