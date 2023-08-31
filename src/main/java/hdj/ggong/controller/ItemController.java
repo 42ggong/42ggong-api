@@ -6,7 +6,6 @@ import hdj.ggong.dto.item.ItemInfoResponse;
 import hdj.ggong.security.CustomUserDetails;
 import hdj.ggong.service.ItemService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +28,8 @@ public class ItemController {
         return itemService.createItem(userDetails, createItemRequest);
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<ItemInfoResponse> getItemInfo(@RequestParam("keepIdentifier") String keepIdentifier) {
+    @GetMapping("/items/identifier/{keepIdentifier}")
+    public ResponseEntity<ItemInfoResponse> getItemInfo(@PathVariable("keepIdentifier") String keepIdentifier) {
         return itemService.getItemInfo(keepIdentifier)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
@@ -39,6 +38,11 @@ public class ItemController {
     @GetMapping("/users/me/items")
     public List<ItemInfoResponse> getMyItemInfoList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return itemService.getMyItemInfoList(userDetails);
+    }
+
+    @GetMapping("/items")
+    public List<ItemInfoResponse> getAllItemInfoList() {
+        return itemService.getAllItemInfoList();
     }
 
 }

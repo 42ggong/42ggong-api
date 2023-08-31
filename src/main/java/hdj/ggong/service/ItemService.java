@@ -46,7 +46,14 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    public List<ItemInfoResponse> getAllItemInfoList() {
+        return itemRepository.findAll().stream()
+                .map(itemMapper::ItemToItemInfoResponse)
+                .collect(Collectors.toList());
+    }
+
     private String generateKeepIdentifier() {
         return UUID.randomUUID().toString().substring(0, 6);
     }
+
 }
