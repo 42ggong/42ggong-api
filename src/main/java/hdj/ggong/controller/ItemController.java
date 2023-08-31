@@ -1,6 +1,5 @@
 package hdj.ggong.controller;
 
-import hdj.ggong.domain.Item;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
@@ -9,6 +8,7 @@ import hdj.ggong.service.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +26,11 @@ public class ItemController {
         return itemService.createItem(userDetails, createItemRequest);
     }
 
-    @GetMapping("/items/{itemId}")
-    public ItemInfoResponse getItemInfo(@PathVariable("itemId") Long itemId) {
-        return itemService.getItemInfo(itemId);
+    @GetMapping("/items")
+    public ResponseEntity<ItemInfoResponse> getItemInfo(@RequestParam("keepIdentifier") String keepIdentifier) {
+        return itemService.getItemInfo(keepIdentifier)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }

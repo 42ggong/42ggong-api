@@ -2,7 +2,6 @@ package hdj.ggong.exception;
 
 import hdj.ggong.common.enums.ErrorCode;
 import hdj.ggong.dto.ErrorResponse;
-import hdj.ggong.exception.item.ItemNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,9 +31,4 @@ public class ExceptionHandlers {
         return buildResponseEntity(errorCode, exceptionMessage);
     }
 
-    @ExceptionHandler(ItemNotExistException.class)
-    public ResponseEntity<ErrorResponse> handleItemNotExistException(ItemNotExistException exception) {
-        log.error("Handling Exception: " + exception);
-        return buildResponseEntity(exception.getErrorCode(), exception.getMessage());
-    }
 }

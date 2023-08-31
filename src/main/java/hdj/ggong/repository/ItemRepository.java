@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     boolean existsByKeepIdentifier(String keepIdentifier);
+
+    Optional<Item> findByKeepIdentifier(String keepIdentifier);
 }
