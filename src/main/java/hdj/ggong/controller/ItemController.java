@@ -42,7 +42,7 @@ public class ItemController {
 
     @GetMapping("/items")
     public List<ItemInfoResponse> getAllItemInfoList() {
-        return itemService.getAllItemInfoList();
+        return itemService.getAllExpiredKeepItemInfoList();
     }
 
 }

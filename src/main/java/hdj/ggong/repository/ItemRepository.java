@@ -14,4 +14,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByKeepIdentifier(String keepIdentifier);
 
     List<Item> findAllByUserIdAndKeepStatus(Long userId, KeepStatus keepStatus);
+
+    List<Item> findAllByKeepStatus(KeepStatus keepStatus);
 }

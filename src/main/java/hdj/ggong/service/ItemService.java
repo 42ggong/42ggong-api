@@ -36,6 +36,13 @@ public class ItemService {
         return itemMapper.ItemToCreateItemResponse(item);
     }
 
+    /*
+    * keepIdentifier를 가진 아이템이 아래의 조건이면 정보를 반환해준다.
+    * - 내 아이템
+    * - 보관 만료 기간이 지난 아이템
+    * - 내가 꺼낸 아이템
+    * - 폐기된 아이템
+    * */
     public Optional<ItemInfoResponse> searchItem(CustomUserDetails userDetails, String keepIdentifier) {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
                 .map(item -> {
@@ -56,8 +63,9 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public List<ItemInfoResponse> getAllItemInfoList() {
-        return itemRepository.findAll().stream()
+    public List<ItemInfoResponse> getAllExpiredKeepItemInfoList() {
+        return itemRepository.findAllByKeepStatus(KeepStatus.STATUS_KEEP).stream()
+                .filter(Item::isKeepExpired)
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
     }
