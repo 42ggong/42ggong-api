@@ -37,7 +37,7 @@ public class ItemController {
 
     @GetMapping("/users/me/items")
     public List<ItemInfoResponse> getMyItemInfoList(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return itemService.getMyItemInfoList(userDetails);
+        return itemService.getMyKeepItemInfoList(userDetails);
     }
 
     @GetMapping("/items")

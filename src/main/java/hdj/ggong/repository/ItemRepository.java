@@ -1,5 +1,6 @@
 package hdj.ggong.repository;
 
+import hdj.ggong.common.enums.KeepStatus;
 import hdj.ggong.domain.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,5 +13,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Optional<Item> findByKeepIdentifier(String keepIdentifier);
 
-    List<Item> findAllByUserId(Long userId);
+    List<Item> findAllByUserIdAndKeepStatus(Long userId, KeepStatus keepStatus);
 }

@@ -50,8 +50,8 @@ public class ItemService {
                 });
     }
 
-    public List<ItemInfoResponse> getMyItemInfoList(CustomUserDetails userDetails) {
-        return itemRepository.findAllByUserId(userDetails.getId()).stream()
+    public List<ItemInfoResponse> getMyKeepItemInfoList(CustomUserDetails userDetails) {
+        return itemRepository.findAllByUserIdAndKeepStatus(userDetails.getId(), KeepStatus.STATUS_KEEP).stream()
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
     }
