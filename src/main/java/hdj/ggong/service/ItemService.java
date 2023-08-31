@@ -12,8 +12,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,6 +38,12 @@ public class ItemService {
     public Optional<ItemInfoResponse> getItemInfo(String keepIdentifier) {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
                 .map(itemMapper::ItemToItemInfoResponse);
+    }
+
+    public List<ItemInfoResponse> getMyItemInfoList(CustomUserDetails userDetails) {
+        return itemRepository.findAllByUserId(userDetails.getId()).stream()
+                .map(itemMapper::ItemToItemInfoResponse)
+                .collect(Collectors.toList());
     }
 
     private String generateKeepIdentifier() {
