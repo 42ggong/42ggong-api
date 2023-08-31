@@ -36,7 +36,7 @@ public class ItemController {
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
-    @GetMapping("/items/my")
+    @GetMapping("/users/me/items")
     public List<ItemInfoResponse> getMyItemInfoList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return itemService.getMyItemInfoList(userDetails);
     }
