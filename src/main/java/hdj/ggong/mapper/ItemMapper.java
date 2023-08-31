@@ -6,6 +6,7 @@ import hdj.ggong.domain.Item;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
+import hdj.ggong.dto.item.ItemInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,15 @@ public class ItemMapper {
 
     public CreateItemResponse ItemToCreateItemResponse(Item item) {
         return CreateItemResponse.builder()
+                .keepIdentifier(item.getKeepIdentifier())
+                .description(item.getDescription())
+                .keepStatus(item.getKeepStatus())
+                .keepExpiryDate(item.getKeepExpiryDate())
+                .build();
+    }
+
+    public ItemInfoResponse ItemToItemInfoResponse(Item item) {
+        return ItemInfoResponse.builder()
                 .keepIdentifier(item.getKeepIdentifier())
                 .description(item.getDescription())
                 .keepStatus(item.getKeepStatus())

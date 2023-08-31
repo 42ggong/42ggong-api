@@ -3,6 +3,7 @@ package hdj.ggong.controller;
 import hdj.ggong.domain.Item;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
+import hdj.ggong.dto.item.ItemInfoResponse;
 import hdj.ggong.security.CustomUserDetails;
 import hdj.ggong.service.ItemService;
 import jakarta.validation.Valid;
@@ -24,4 +25,10 @@ public class ItemController {
                                          @Valid @RequestBody CreateItemRequest createItemRequest) {
         return itemService.createItem(userDetails, createItemRequest);
     }
+
+    @GetMapping("/items/{itemId}")
+    public ItemInfoResponse getItemInfo(@PathVariable("itemId") Long itemId) {
+        return itemService.getItemInfo(itemId);
+    }
+
 }

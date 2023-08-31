@@ -4,6 +4,8 @@ import hdj.ggong.domain.Item;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
+import hdj.ggong.dto.item.ItemInfoResponse;
+import hdj.ggong.exception.item.ItemNotExistException;
 import hdj.ggong.mapper.ItemMapper;
 import hdj.ggong.repository.ItemRepository;
 import hdj.ggong.security.CustomUserDetails;
@@ -29,6 +31,12 @@ public class ItemService {
         }
         Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
         return itemMapper.ItemToCreateItemResponse(item);
+    }
+
+    public ItemInfoResponse getItemInfo(Long itemId) {
+        return itemRepository.findById(itemId)
+                .map(itemMapper::ItemToItemInfoResponse)
+                .orElseThrow(() -> new ItemNotExistException(itemId));
     }
 
     private String generateKeepIdentifier() {
