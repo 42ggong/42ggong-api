@@ -29,8 +29,8 @@ public class ItemController {
     }
 
     @GetMapping("/items/identifier/{keepIdentifier}")
-    public ResponseEntity<ItemInfoResponse> getItemInfo(@PathVariable("keepIdentifier") String keepIdentifier) {
-        return itemService.getItemInfo(keepIdentifier)
+    public ResponseEntity<ItemInfoResponse> searchItem(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("keepIdentifier") String keepIdentifier) {
+        return itemService.searchItem(userDetails, keepIdentifier)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }

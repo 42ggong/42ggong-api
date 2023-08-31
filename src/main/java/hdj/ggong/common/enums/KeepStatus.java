@@ -9,8 +9,8 @@ public enum KeepStatus {
 
     STATUS_KEEP("STATUS_KEEP"),
     STATUS_PULL("STATUS_PULL"),
-    STATUS_DISUSE("STATUS_DISUSE"),
-    STATUS_RE_DISUSE("STATUS_RE_DISUSE");
+    STATUS_DISUSED("STATUS_DISUSED")
+    ;
 
     private final String keepStatus;
 }

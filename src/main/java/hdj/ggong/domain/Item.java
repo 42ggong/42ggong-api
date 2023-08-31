@@ -52,4 +52,8 @@ public class Item {
             this.keepExpiryDate = createAt.plusDays(1);
         }
     }
+
+    public boolean isKeepExpired() {
+        return keepExpiryDate.isBefore(LocalDateTime.now());
+    }
 }

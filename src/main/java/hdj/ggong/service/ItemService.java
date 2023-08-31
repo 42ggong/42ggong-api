@@ -1,5 +1,6 @@
 package hdj.ggong.service;
 
+import hdj.ggong.common.enums.KeepStatus;
 import hdj.ggong.domain.Item;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
@@ -35,9 +36,18 @@ public class ItemService {
         return itemMapper.ItemToCreateItemResponse(item);
     }
 
-    public Optional<ItemInfoResponse> getItemInfo(String keepIdentifier) {
+    public Optional<ItemInfoResponse> searchItem(CustomUserDetails userDetails, String keepIdentifier) {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
-                .map(itemMapper::ItemToItemInfoResponse);
+                .map(item -> {
+                    if (item.getUser().getId().equals(userDetails.getId())
+                            || item.isKeepExpired()
+                            || item.getKeepStatus().equals(KeepStatus.STATUS_PULL)
+                            || item.getKeepStatus().equals(KeepStatus.STATUS_DISUSED)
+                    ) {
+                        return itemMapper.ItemToItemInfoResponse(item);
+                    }
+                    return null;
+                });
     }
 
     public List<ItemInfoResponse> getMyItemInfoList(CustomUserDetails userDetails) {
