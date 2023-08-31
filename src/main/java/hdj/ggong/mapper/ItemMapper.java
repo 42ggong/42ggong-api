@@ -10,6 +10,8 @@ import hdj.ggong.dto.item.ItemInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class ItemMapper {
@@ -31,7 +33,7 @@ public class ItemMapper {
                 .keepIdentifier(item.getKeepIdentifier())
                 .description(item.getDescription())
                 .keepStatus(item.getKeepStatus())
-                .keepExpiryDate(item.getKeepExpiryDate())
+                .keepExpiryDate(localDateToMMDD(item.getKeepExpiryDate()))
                 .build();
     }
 
@@ -40,8 +42,14 @@ public class ItemMapper {
                 .keepIdentifier(item.getKeepIdentifier())
                 .description(item.getDescription())
                 .keepStatus(item.getKeepStatus())
-                .keepExpiryDate(item.getKeepExpiryDate())
+                .keepExpiryDate(localDateToMMDD(item.getKeepExpiryDate()))
                 .build();
+    }
+
+    private String localDateToMMDD(LocalDateTime localDateTime) {
+        String MM = String.format("%02d", localDateTime.getMonthValue());
+        String DD = String.format("%02d", localDateTime.getDayOfMonth());
+        return MM + DD;
     }
 
 }

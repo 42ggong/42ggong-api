@@ -4,8 +4,6 @@ import hdj.ggong.common.enums.KeepStatus;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Builder
 public class ItemInfoResponse {
@@ -16,5 +14,5 @@ public class ItemInfoResponse {
 
     private KeepStatus keepStatus;
 
-    private LocalDateTime keepExpiryDate;
+    private String keepExpiryDate;
 }
