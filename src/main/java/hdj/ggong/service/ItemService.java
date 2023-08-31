@@ -21,13 +21,14 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ItemRepository itemRepository;
 
-    public Item createItem(CustomUserDetails userDetails, CreateItemRequest createItemRequest) {
+    public CreateItemResponse createItem(CustomUserDetails userDetails, CreateItemRequest createItemRequest) {
         User user = userDetails.getUser();
         String keepIdentifier = generateKeepIdentifier();
         while (itemRepository.existsByKeepIdentifier(keepIdentifier)) {
             keepIdentifier = generateKeepIdentifier();
         }
-        return itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
+        Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
+        return itemMapper.ItemToCreateItemResponse(item);
     }
 
     private String generateKeepIdentifier() {

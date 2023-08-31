@@ -25,4 +25,13 @@ public class ItemMapper {
                 .build();
     }
 
+    public CreateItemResponse ItemToCreateItemResponse(Item item) {
+        return CreateItemResponse.builder()
+                .keepIdentifier(item.getKeepIdentifier())
+                .description(item.getDescription())
+                .keepStatus(item.getKeepStatus())
+                .keepExpiryDate(item.getKeepExpiryDate())
+                .build();
+    }
+
 }

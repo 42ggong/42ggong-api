@@ -2,6 +2,7 @@ package hdj.ggong.controller;
 
 import hdj.ggong.domain.Item;
 import hdj.ggong.dto.item.CreateItemRequest;
+import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.security.CustomUserDetails;
 import hdj.ggong.service.ItemService;
 import jakarta.validation.Valid;
@@ -19,8 +20,8 @@ public class ItemController {
 
     @PostMapping("/items")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Item createItem(@AuthenticationPrincipal CustomUserDetails userDetails,
-                           @Valid @RequestBody CreateItemRequest createItemRequest) {
+    public CreateItemResponse createItem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                         @Valid @RequestBody CreateItemRequest createItemRequest) {
         return itemService.createItem(userDetails, createItemRequest);
     }
 }
