@@ -6,6 +6,7 @@ import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
+import hdj.ggong.dto.item.PullOutItemsRequest;
 import hdj.ggong.mapper.ItemMapper;
 import hdj.ggong.repository.ItemRepository;
 import hdj.ggong.security.CustomUserDetails;
@@ -37,12 +38,12 @@ public class ItemService {
     }
 
     /*
-    * keepIdentifier를 가진 아이템이 아래의 조건이면 정보를 반환해준다.
-    * - 내 아이템
-    * - 보관 만료 기간이 지난 아이템
-    * - 내가 꺼낸 아이템
-    * - 폐기된 아이템
-    * */
+     * keepIdentifier를 가진 아이템이 아래의 조건이면 정보를 반환해준다.
+     * - 내 아이템
+     * - 보관 만료 기간이 지난 아이템
+     * - 내가 꺼낸 아이템
+     * - 폐기된 아이템
+     * */
     public Optional<ItemInfoResponse> searchItem(CustomUserDetails userDetails, String keepIdentifier) {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
                 .map(item -> {
@@ -68,6 +69,23 @@ public class ItemService {
                 .filter(Item::isKeepExpired)
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
+    }
+
+    public void pullOutItem(CustomUserDetails userDetails, PullOutItemsRequest pullOutItemsRequest) {
+        pullOutItemsRequest.getKeepIdentifierList()
+                .forEach(keepIdentifier -> {
+                    Item item = itemRepository.findByKeepIdentifier(keepIdentifier)
+                            .map(m -> {
+                                if (m.isKeepExpired()) {
+                                    m.changeKeepStatusToDisused();
+                                } else if (m.isOwned(userDetails.getId())) {
+                                    m.changeKeepStatusToPull();
+                                }
+                                return m;
+                            })
+                            .orElseThrow(() -> new RuntimeException(""));
+                    itemRepository.save(item);
+                });
     }
 
     private String generateKeepIdentifier() {

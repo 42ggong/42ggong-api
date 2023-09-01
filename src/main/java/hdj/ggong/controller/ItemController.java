@@ -3,6 +3,7 @@ package hdj.ggong.controller;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
+import hdj.ggong.dto.item.PullOutItemsRequest;
 import hdj.ggong.security.CustomUserDetails;
 import hdj.ggong.service.ItemService;
 import jakarta.validation.Valid;
@@ -45,4 +46,8 @@ public class ItemController {
         return itemService.getAllExpiredKeepItemInfoList();
     }
 
+    @PutMapping("/items/pullout")
+    public void pullOutItem(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody PullOutItemsRequest pullOutItemsRequest) {
+        itemService.pullOutItem(userDetails, pullOutItemsRequest);
+    }
 }

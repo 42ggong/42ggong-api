@@ -56,4 +56,20 @@ public class Item {
     public boolean isKeepExpired() {
         return keepExpiryDate.isBefore(LocalDateTime.now());
     }
+
+    public void changeKeepStatusToPull() {
+        this.keepStatus = KeepStatus.PULLOUT;
+    }
+
+    public void changeKeepStatusToDisused() {
+        this.keepStatus = KeepStatus.DISUSED;
+    }
+
+    public boolean isOwned(Long userId) {
+        if (this.user.getId().equals(userId)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
