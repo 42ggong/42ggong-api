@@ -1,4 +1,4 @@
-package hdj.ggong.common;
+package hdj.ggong.common.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

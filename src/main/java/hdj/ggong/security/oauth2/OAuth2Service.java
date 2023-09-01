@@ -1,12 +1,6 @@
 package hdj.ggong.security.oauth2;
 
-import hdj.ggong.common.Role;
-import hdj.ggong.domain.User;
-import hdj.ggong.mapper.UserMapper;
-import hdj.ggong.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
+import hdj.ggong.common.enums.Role;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @Service

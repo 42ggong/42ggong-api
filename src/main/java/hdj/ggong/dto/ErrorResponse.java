@@ -1,9 +1,10 @@
 package hdj.ggong.dto;
 
-import hdj.ggong.common.ErrorCode;
-import jakarta.servlet.http.HttpServletResponse;
+import hdj.ggong.common.enums.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 
 @Getter
 @Builder
@@ -14,4 +15,5 @@ public class ErrorResponse {
     private final String code;
 
     private final String message;
+
 }

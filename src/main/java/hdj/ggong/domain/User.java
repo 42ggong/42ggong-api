@@ -1,6 +1,6 @@
 package hdj.ggong.domain;
 
-import hdj.ggong.common.Role;
+import hdj.ggong.common.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
