@@ -48,15 +48,18 @@ public class ItemService {
     public Optional<ItemInfoResponse> searchItem(CustomUserDetails userDetails, String keepIdentifier) {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
                 .map(item -> {
-                    if (item.getUser().getId().equals(userDetails.getId())
-                            || item.isKeepExpired()
-                            || item.getKeepStatus().equals(KeepStatus.PULLOUT)
-                            || item.getKeepStatus().equals(KeepStatus.DISUSED)
-                    ) {
+                    if (isItemAccessible(userDetails, item)) {
                         return itemMapper.ItemToItemInfoResponse(item);
                     }
                     return null;
                 });
+    }
+
+    private boolean isItemAccessible(CustomUserDetails userDetails, Item item) {
+        return item.isOwned(userDetails.getId())
+                || item.isKeepExpired()
+                || KeepStatus.PULLOUT.equals(item.getKeepStatus())
+                || KeepStatus.DISUSED.equals(item.getKeepStatus());
     }
 
     public List<ItemInfoResponse> getMyKeepItemInfoList(CustomUserDetails userDetails) {
