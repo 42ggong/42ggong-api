@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @ControllerAdvice
@@ -31,4 +32,11 @@ public class ExceptionHandlers {
         return buildResponseEntity(errorCode, exceptionMessage);
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        log.error("Handling Exception: " + exception);
+        ErrorCode errorCode = ErrorCode.INVALID_REQUEST;
+        String detailMessage = exception.getCause().getMessage();
+        return buildResponseEntity(errorCode, detailMessage);
+    }
 }

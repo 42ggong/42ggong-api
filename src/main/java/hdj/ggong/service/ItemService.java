@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -64,9 +65,15 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public List<ItemInfoResponse> getAllExpiredKeepItemInfoList() {
-        return itemRepository.findAllByKeepStatus(KeepStatus.KEEP).stream()
-                .filter(Item::isKeepExpired)
+    public List<ItemInfoResponse> getAllItemsWithFilterInfoList(KeepStatus keepStatus, Boolean isExpired) {
+        Stream<Item> itemStream = itemRepository.findAll().stream();
+        if (keepStatus != null) {
+            itemStream = itemStream.filter(item -> item.getKeepStatus() == keepStatus);
+        }
+        if (isExpired != null) {
+            itemStream = itemStream.filter(item -> item.isKeepExpired() == isExpired);
+        }
+        return itemStream
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
     }

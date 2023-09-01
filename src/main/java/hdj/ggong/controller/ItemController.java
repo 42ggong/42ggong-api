@@ -1,5 +1,6 @@
 package hdj.ggong.controller;
 
+import hdj.ggong.common.enums.KeepStatus;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
@@ -30,7 +31,8 @@ public class ItemController {
     }
 
     @GetMapping("/items/identifier/{keepIdentifier}")
-    public ResponseEntity<ItemInfoResponse> searchItem(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable("keepIdentifier") String keepIdentifier) {
+    public ResponseEntity<ItemInfoResponse> searchItem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                       @PathVariable("keepIdentifier") String keepIdentifier) {
         return itemService.searchItem(userDetails, keepIdentifier)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
@@ -42,8 +44,9 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public List<ItemInfoResponse> getAllItemInfoList() {
-        return itemService.getAllExpiredKeepItemInfoList();
+    public List<ItemInfoResponse> getAllItemsWithFilterInfoList(@RequestParam(value = "keepStatus", required = false) KeepStatus keepStatus,
+                                                                @RequestParam(value = "isExpired", required = false) Boolean isExpired) {
+        return itemService.getAllItemsWithFilterInfoList(keepStatus, isExpired);
     }
 
     @PutMapping("/items/pullout")
