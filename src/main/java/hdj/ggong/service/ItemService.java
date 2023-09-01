@@ -48,8 +48,8 @@ public class ItemService {
                 .map(item -> {
                     if (item.getUser().getId().equals(userDetails.getId())
                             || item.isKeepExpired()
-                            || item.getKeepStatus().equals(KeepStatus.STATUS_PULL)
-                            || item.getKeepStatus().equals(KeepStatus.STATUS_DISUSED)
+                            || item.getKeepStatus().equals(KeepStatus.PULLOUT)
+                            || item.getKeepStatus().equals(KeepStatus.DISUSED)
                     ) {
                         return itemMapper.ItemToItemInfoResponse(item);
                     }
@@ -58,13 +58,13 @@ public class ItemService {
     }
 
     public List<ItemInfoResponse> getMyKeepItemInfoList(CustomUserDetails userDetails) {
-        return itemRepository.findAllByUserIdAndKeepStatus(userDetails.getId(), KeepStatus.STATUS_KEEP).stream()
+        return itemRepository.findAllByUserIdAndKeepStatus(userDetails.getId(), KeepStatus.KEEP).stream()
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
     }
 
     public List<ItemInfoResponse> getAllExpiredKeepItemInfoList() {
-        return itemRepository.findAllByKeepStatus(KeepStatus.STATUS_KEEP).stream()
+        return itemRepository.findAllByKeepStatus(KeepStatus.KEEP).stream()
                 .filter(Item::isKeepExpired)
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());

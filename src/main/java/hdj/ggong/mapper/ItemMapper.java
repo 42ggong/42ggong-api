@@ -23,7 +23,7 @@ public class ItemMapper {
                 .user(user)
                 .keepIdentifier(keepIdentifier)
                 .description(itemRequest.getDescription())
-                .keepStatus(KeepStatus.STATUS_KEEP)
+                .keepStatus(KeepStatus.KEEP)
                 .createAt(timeUtil.getCurrentDate())
                 .build();
     }
