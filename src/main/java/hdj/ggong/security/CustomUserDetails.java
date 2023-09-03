@@ -1,5 +1,6 @@
 package hdj.ggong.security;
 
+import hdj.ggong.common.enums.Role;
 import hdj.ggong.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,8 +27,8 @@ public class CustomUserDetails implements UserDetails {
         return user.getId();
     }
 
-    public String getRole() {
-        return user.getRole().getRoleName();
+    public Role getRole() {
+        return user.getRole();
     }
 
     public boolean isAccountNonPenalty() {
