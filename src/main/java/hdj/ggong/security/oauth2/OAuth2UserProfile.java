@@ -17,7 +17,8 @@ public class OAuth2UserProfile {
         return User.builder()
                 .username(this.username)
                 .role(Role.ROLE_USER)
-                .benefitPoint(0L)
+                .benefitPoint(0)
+                .penaltyPoint(0)
                 .isAccountNonPenalty(true)
                 .isAccountNonLocked(true)
                 .build();
