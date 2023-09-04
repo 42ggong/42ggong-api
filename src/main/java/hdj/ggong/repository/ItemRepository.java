@@ -15,5 +15,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findAllByUserIdAndKeepStatus(Long userId, KeepStatus keepStatus);
 
-    List<Item> findAllByKeepStatus(KeepStatus keepStatus);
+    List<Item> findAllByOrderByKeepExpiryDate();
 }
