@@ -1,7 +1,6 @@
 package hdj.ggong.security.jwt;
 
 import hdj.ggong.domain.User;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -59,24 +58,18 @@ public class JwtProvider {
 
     public String getBearerTokenFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (!authorizationHeader.contains("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.contains("Bearer ")) {
             log.error("Not bearer authentication");
             return "";
         }
         return authorizationHeader.substring(6).trim();
     }
 
-    public Boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException jwtException) {
-            log.error("JWS Exception: " + jwtException);
-            return false;
-        }
+    public void validateToken(String token) {
+        Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
     }
 
     public String getUsernameFromToken(String token) {

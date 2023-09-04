@@ -3,6 +3,7 @@ package hdj.ggong.security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hdj.ggong.common.enums.ErrorCode;
 import hdj.ggong.dto.ErrorResponse;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             doFilter(request, response, filterChain);
         } catch (UsernameNotFoundException usernameNotFoundException) {
+            log.error("Handling Exception: " + usernameNotFoundException);
             sendErrorResponse(response, ErrorCode.USERNAME_NOT_FOUND, usernameNotFoundException);
+        } catch (JwtException | IllegalArgumentException jwtException) {
+            log.error("Handling Exception: " + jwtException);
+            sendErrorResponse(response, ErrorCode.INVALID_JWT, jwtException);
         }
     }
 
