@@ -44,9 +44,10 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public List<ItemInfoResponse> getAllItemsWithFilterInfoList(@RequestParam(value = "keepStatus", required = false) KeepStatus keepStatus,
+    public List<ItemInfoResponse> getAllItemsWithFilterInfoList(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                @RequestParam(value = "keepStatus", required = false) KeepStatus keepStatus,
                                                                 @RequestParam(value = "isExpired", required = false) Boolean isExpired) {
-        return itemService.getAllItemsWithFilterInfoList(keepStatus, isExpired);
+        return itemService.getAllFilteredItemsInfoList(userDetails, keepStatus, isExpired);
     }
 
     @PutMapping("/items/pullout")

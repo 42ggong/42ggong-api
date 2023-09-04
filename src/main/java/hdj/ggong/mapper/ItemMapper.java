@@ -7,6 +7,7 @@ import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
+import hdj.ggong.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public CreateItemResponse ItemToCreateItemResponse(Item item) {
+    public CreateItemResponse itemToCreateItemResponse(Item item) {
         return CreateItemResponse.builder()
                 .keepIdentifier(item.getKeepIdentifier())
                 .description(item.getDescription())
@@ -37,12 +38,13 @@ public class ItemMapper {
                 .build();
     }
 
-    public ItemInfoResponse ItemToItemInfoResponse(Item item) {
+    public ItemInfoResponse itemToItemInfoResponse(CustomUserDetails userDetails, Item item) {
         return ItemInfoResponse.builder()
                 .keepIdentifier(item.getKeepIdentifier())
                 .description(item.getDescription())
                 .keepStatus(item.getKeepStatus())
                 .keepExpiryDate(localDateToMMDD(item.getKeepExpiryDate()))
+                .isOwned(item.isOwned(userDetails.getId()))
                 .build();
     }
 

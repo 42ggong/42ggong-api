@@ -40,7 +40,7 @@ public class ItemService {
         }
         Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
         itemHistoryService.recordHistory(user, item);
-        return itemMapper.ItemToCreateItemResponse(item);
+        return itemMapper.itemToCreateItemResponse(item);
     }
 
     public void pullOutItem(CustomUserDetails userDetails, PullOutItemsRequest pullOutItemsRequest) {
@@ -79,7 +79,7 @@ public class ItemService {
         return itemRepository.findByKeepIdentifier(keepIdentifier)
                 .map(item -> {
                     if (isItemAccessible(userDetails, item)) {
-                        return itemMapper.ItemToItemInfoResponse(item);
+                        return itemMapper.itemToItemInfoResponse(userDetails, item);
                     }
                     return null;
                 });
@@ -94,11 +94,11 @@ public class ItemService {
 
     public List<ItemInfoResponse> getMyKeepItemInfoList(CustomUserDetails userDetails) {
         return itemRepository.findAllByUserIdAndKeepStatus(userDetails.getId(), KeepStatus.KEEP).stream()
-                .map(itemMapper::ItemToItemInfoResponse)
+                .map(item -> itemMapper.itemToItemInfoResponse(userDetails, item))
                 .collect(Collectors.toList());
     }
 
-    public List<ItemInfoResponse> getAllItemsWithFilterInfoList(KeepStatus keepStatus, Boolean isExpired) {
+    public List<ItemInfoResponse> getAllFilteredItemsInfoList(CustomUserDetails userDetails, KeepStatus keepStatus, Boolean isExpired) {
         Stream<Item> itemStream = itemRepository.findAll().stream();
         if (keepStatus != null) {
             itemStream = itemStream.filter(item -> item.getKeepStatus() == keepStatus);
@@ -107,7 +107,7 @@ public class ItemService {
             itemStream = itemStream.filter(item -> item.isKeepExpired() == isExpired);
         }
         return itemStream
-                .map(itemMapper::ItemToItemInfoResponse)
+                .map(item -> itemMapper.itemToItemInfoResponse(userDetails, item))
                 .collect(Collectors.toList());
     }
 
