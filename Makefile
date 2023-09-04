@@ -42,3 +42,12 @@ stop_db:
 .PHONY: restart_db
 restart_db:
 	brew services restart mariadb
+
+.PHONY: reset_tables
+reset_tables:
+	mariadb < sql-ddl/drop_tables.sql
+	mariadb < sql-ddl/create_tables.sql
+
+.PHONY: dummy_tables
+dummy_tables:
+	mariadb < sql-ddl/insert_two_users_and_items.sql
