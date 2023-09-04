@@ -31,6 +31,14 @@ public class CustomUserDetails implements UserDetails {
         return user.getRole();
     }
 
+    public int getBenefitPoint() {
+        return user.getBenefitPoint();
+    }
+
+    public int getPenaltyPoint() {
+        return user.getPenaltyPoint();
+    }
+
     public boolean isAccountNonPenalty() {
         return user.isAccountNonPenalty();
     }
