@@ -99,7 +99,7 @@ public class ItemService {
     }
 
     public List<ItemInfoResponse> getAllFilteredItemsInfoList(CustomUserDetails userDetails, KeepStatus keepStatus, Boolean isExpired) {
-        Stream<Item> itemStream = itemRepository.findAll().stream();
+        Stream<Item> itemStream = itemRepository.findAllByOrderByKeepExpiryDate().stream();
         if (keepStatus != null) {
             itemStream = itemStream.filter(item -> item.getKeepStatus() == keepStatus);
         }
