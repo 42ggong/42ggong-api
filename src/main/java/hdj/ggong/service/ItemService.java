@@ -2,15 +2,14 @@ package hdj.ggong.service;
 
 import hdj.ggong.common.enums.KeepStatus;
 import hdj.ggong.domain.Item;
-import hdj.ggong.domain.ItemHistory;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
 import hdj.ggong.dto.item.PullOutItemsRequest;
 import hdj.ggong.mapper.ItemMapper;
-import hdj.ggong.repository.ItemHistoryRepository;
 import hdj.ggong.repository.ItemRepository;
+import hdj.ggong.repository.UserRepository;
 import hdj.ggong.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +30,7 @@ public class ItemService {
     private final ItemMapper itemMapper;
     private final ItemRepository itemRepository;
     private final ItemHistoryService itemHistoryService;
+    private final UserRepository userRepository;
 
     public CreateItemResponse createItem(CustomUserDetails userDetails, CreateItemRequest createItemRequest) {
         User user = userDetails.getUser();
@@ -40,6 +41,31 @@ public class ItemService {
         Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
         itemHistoryService.recordHistory(user, item);
         return itemMapper.ItemToCreateItemResponse(item);
+    }
+
+    public void pullOutItem(CustomUserDetails userDetails, PullOutItemsRequest pullOutItemsRequest) {
+        AtomicInteger benefitPoint = new AtomicInteger();
+        pullOutItemsRequest.getKeepIdentifierList()
+                .forEach(keepIdentifier -> {
+                    itemRepository.findByKeepIdentifier(keepIdentifier)
+                            .map(item -> {
+                                if (item.isOwned(userDetails.getId())) {
+                                    item.changeKeepStatusToPull();
+                                } else if (item.isKeepExpired()) {
+                                    item.changeKeepStatusToDisused();
+                                    benefitPoint.addAndGet(1);
+                                    User itemOwnedUser = item.getUser();
+                                    itemOwnedUser.givenPenaltyPoint();
+                                    userRepository.save(itemOwnedUser);
+                                }
+                                itemRepository.save(item);
+                                itemHistoryService.recordHistory(userDetails.getUser(), item);
+                                return null;
+                            });
+                });
+        User user = userDetails.getUser();
+        user.givenBenefitPoint(benefitPoint.get());
+        userRepository.save(user);
     }
 
     /*
@@ -83,24 +109,6 @@ public class ItemService {
         return itemStream
                 .map(itemMapper::ItemToItemInfoResponse)
                 .collect(Collectors.toList());
-    }
-
-    public void pullOutItem(CustomUserDetails userDetails, PullOutItemsRequest pullOutItemsRequest) {
-        pullOutItemsRequest.getKeepIdentifierList()
-                .forEach(keepIdentifier -> {
-                    Item item = itemRepository.findByKeepIdentifier(keepIdentifier)
-                            .map(m -> {
-                                if (m.isKeepExpired()) {
-                                    m.changeKeepStatusToDisused();
-                                } else if (m.isOwned(userDetails.getId())) {
-                                    m.changeKeepStatusToPull();
-                                }
-                                return m;
-                            })
-                            .orElseThrow(() -> new RuntimeException(""));
-                    itemRepository.save(item);
-                    itemHistoryService.recordHistory(userDetails.getUser(), item);
-                });
     }
 
     private String generateKeepIdentifier() {
