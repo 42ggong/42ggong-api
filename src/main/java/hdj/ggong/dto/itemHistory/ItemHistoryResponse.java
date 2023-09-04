@@ -5,16 +5,26 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
 public class ItemHistoryResponse {
 
-    private String username;
+    int totalPage;
 
-    private String keepIdentifier;
+    List<ItemHistoryAttributes> itemHistoryList;
 
-    private KeepStatus keepStatus;
+    @Getter
+    @Builder
+    public static class ItemHistoryAttributes {
 
-    private LocalDateTime recordedDate;
+        private String username;
+
+        private String keepIdentifier;
+
+        private KeepStatus keepStatus;
+
+        private LocalDateTime recordedDate;
+    }
 }

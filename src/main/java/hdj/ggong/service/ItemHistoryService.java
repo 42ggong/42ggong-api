@@ -10,11 +10,11 @@ import hdj.ggong.repository.ItemHistoryRepository;
 import hdj.ggong.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,14 +35,9 @@ public class ItemHistoryService {
         itemHistoryRepository.save(itemHistory);
     }
 
-    public List<ItemHistoryResponse> getItemHistoryListWithPage(CustomUserDetails userDetails, Integer page) {
-        if (page == null) {
-            return itemHistoryRepository.findAllByOrderByRecordedDate().stream()
-                    .map(itemHistory -> itemHistoryMapper.itemHistoryToItemHistoryResponse(itemHistory, userDetails.getRole()))
-                    .collect(Collectors.toList());
-        }
-        return itemHistoryRepository.findAllByOrderByRecordedDate(PageRequest.of(page, 30)).stream()
-                .map(itemHistory -> itemHistoryMapper.itemHistoryToItemHistoryResponse(itemHistory, userDetails.getRole()))
-                .collect(Collectors.toList());
+    public ItemHistoryResponse getItemHistoryListWithPage(CustomUserDetails userDetails, Integer page) {
+        Page<ItemHistory> itemHistoryPage = itemHistoryRepository.findAllByOrderByRecordedDate(PageRequest.of(page, 30));
+
+        return itemHistoryMapper.ItemHistoryPageToItemHistoryResponse(userDetails, itemHistoryPage);
     }
 }
