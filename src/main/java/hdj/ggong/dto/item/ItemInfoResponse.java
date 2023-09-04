@@ -15,4 +15,6 @@ public class ItemInfoResponse {
     private KeepStatus keepStatus;
 
     private String keepExpiryDate;
+
+    private boolean isOwned;
 }
