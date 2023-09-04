@@ -2,12 +2,14 @@ package hdj.ggong.service;
 
 import hdj.ggong.common.enums.KeepStatus;
 import hdj.ggong.domain.Item;
+import hdj.ggong.domain.ItemHistory;
 import hdj.ggong.domain.User;
 import hdj.ggong.dto.item.CreateItemRequest;
 import hdj.ggong.dto.item.CreateItemResponse;
 import hdj.ggong.dto.item.ItemInfoResponse;
 import hdj.ggong.dto.item.PullOutItemsRequest;
 import hdj.ggong.mapper.ItemMapper;
+import hdj.ggong.repository.ItemHistoryRepository;
 import hdj.ggong.repository.ItemRepository;
 import hdj.ggong.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
@@ -27,6 +29,7 @@ public class ItemService {
 
     private final ItemMapper itemMapper;
     private final ItemRepository itemRepository;
+    private final ItemHistoryService itemHistoryService;
 
     public CreateItemResponse createItem(CustomUserDetails userDetails, CreateItemRequest createItemRequest) {
         User user = userDetails.getUser();
@@ -35,6 +38,7 @@ public class ItemService {
             keepIdentifier = generateKeepIdentifier();
         }
         Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
+        itemHistoryService.recordHistory(user, item);
         return itemMapper.ItemToCreateItemResponse(item);
     }
 
@@ -95,6 +99,7 @@ public class ItemService {
                             })
                             .orElseThrow(() -> new RuntimeException(""));
                     itemRepository.save(item);
+                    itemHistoryService.recordHistory(userDetails.getUser(), item);
                 });
     }
 
