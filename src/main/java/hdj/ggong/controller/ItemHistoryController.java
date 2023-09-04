@@ -20,8 +20,8 @@ public class ItemHistoryController {
     private final ItemHistoryService itemHistoryService;
 
     @GetMapping("/item-histories")
-    public List<ItemHistoryResponse> getItemHistoryListWithPage(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                                @RequestParam(value = "page", required = false) Integer page) {
+    public ItemHistoryResponse getItemHistoryListWithPage(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                @RequestParam(value = "page", required = true) Integer page) {
         return itemHistoryService.getItemHistoryListWithPage(userDetails, page);
     }
 }
