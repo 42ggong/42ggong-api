@@ -30,20 +30,8 @@ public class SecurityConfiguration {
     private final OAuth2Service oAuth2Service;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-    private final JwtProvider jwtProvider;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final ObjectMapper objectMapper;
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring()
-                    .requestMatchers(
-                            "/oauth2/authorization/ft",
-                            "/api/v1/slack/**"
-                    );
-        };
-    }
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,13 +54,13 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/slack/**").permitAll()
+                        .requestMatchers("/oauth2/authorization/ft").permitAll()
                         .anyRequest().authenticated()
                 );
 
         http
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
