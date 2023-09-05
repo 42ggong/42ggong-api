@@ -1,7 +1,9 @@
 package hdj.ggong.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hdj.ggong.security.jwt.JwtAuthenticationFilter;
 import hdj.ggong.security.jwt.JwtExceptionFilter;
+import hdj.ggong.security.jwt.JwtProvider;
 import hdj.ggong.security.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,8 +30,20 @@ public class SecurityConfiguration {
     private final OAuth2Service oAuth2Service;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
     private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtExceptionFilter jwtExceptionFilter;
+    private final JwtProvider jwtProvider;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final ObjectMapper objectMapper;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> {
+            web.ignoring()
+                    .requestMatchers(
+                            "/oauth2/authorization/ft",
+                            "/api/v1/slack/**"
+                    );
+        };
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,17 +63,16 @@ public class SecurityConfiguration {
                         .successHandler(customAuthenticationSuccessHandler)
                         .failureHandler(customAuthenticationFailureHandler)
                 );
-        http
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/oauth2/authorization/ft").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/api/v1/slack/**").permitAll()
                         .anyRequest().authenticated()
                 );
+
+        http
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(objectMapper), JwtAuthenticationFilter.class);
 
         return http.build();
     }
@@ -75,4 +89,5 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
