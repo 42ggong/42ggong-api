@@ -11,6 +11,7 @@ import hdj.ggong.mapper.ItemMapper;
 import hdj.ggong.repository.ItemRepository;
 import hdj.ggong.repository.UserRepository;
 import hdj.ggong.security.CustomUserDetails;
+import hdj.ggong.slack.SlackService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemHistoryService itemHistoryService;
     private final UserRepository userRepository;
+    private final SlackService slackService;
 
     public CreateItemResponse createItem(CustomUserDetails userDetails, CreateItemRequest createItemRequest) {
         User user = userDetails.getUser();
@@ -40,29 +42,31 @@ public class ItemService {
         }
         Item item = itemRepository.save(itemMapper.createItemRequestToItem(user, createItemRequest, keepIdentifier));
         itemHistoryService.recordHistory(user, item);
+        slackService.sendMessage(user.getSlackId(), item.getKeepIdentifier() + ": 보관했습니다.");
         return itemMapper.itemToCreateItemResponse(item);
     }
 
     public void pullOutItem(CustomUserDetails userDetails, PullOutItemsRequest pullOutItemsRequest) {
         AtomicInteger benefitPoint = new AtomicInteger();
         pullOutItemsRequest.getKeepIdentifierList()
-                .forEach(keepIdentifier -> {
-                    itemRepository.findByKeepIdentifier(keepIdentifier)
-                            .map(item -> {
-                                if (item.isOwned(userDetails.getId())) {
-                                    item.changeKeepStatusToPull();
-                                } else if (item.isKeepExpired()) {
-                                    item.changeKeepStatusToDisused();
-                                    benefitPoint.addAndGet(1);
-                                    User itemOwnedUser = item.getUser();
-                                    itemOwnedUser.givenPenaltyPoint();
-                                    userRepository.save(itemOwnedUser);
-                                }
-                                itemRepository.save(item);
-                                itemHistoryService.recordHistory(userDetails.getUser(), item);
-                                return null;
-                            });
-                });
+                .forEach(keepIdentifier -> itemRepository.findByKeepIdentifier(keepIdentifier)
+                        .map(item -> {
+                            if (item.isOwned(userDetails.getId())) {
+                                item.changeKeepStatusToPull();
+                                slackService.sendMessage(userDetails.getSlackId(), keepIdentifier + ": 꺼냈습니다.");
+                            } else if (item.isKeepExpired()) {
+                                item.changeKeepStatusToDisused();
+                                benefitPoint.addAndGet(1);
+                                User itemOwnedUser = item.getUser();
+                                itemOwnedUser.givenPenaltyPoint();
+                                userRepository.save(itemOwnedUser);
+                                slackService.sendMessage(itemOwnedUser.getSlackId(), keepIdentifier + ": 폐기처리 되었습니다.");
+                            }
+                            itemRepository.save(item);
+                            itemHistoryService.recordHistory(userDetails.getUser(), item);
+                            return null;
+                        })
+                );
         User user = userDetails.getUser();
         user.givenBenefitPoint(benefitPoint.get());
         userRepository.save(user);
