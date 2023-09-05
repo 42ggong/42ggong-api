@@ -21,6 +21,12 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "slack_id")
+    private String slackId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;

@@ -2,6 +2,7 @@ package hdj.ggong.security;
 
 import hdj.ggong.common.enums.Role;
 import hdj.ggong.domain.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,12 +20,16 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public Long getId() {
         return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public String getSlackId() {
+        return user.getSlackId();
     }
 
     public Role getRole() {

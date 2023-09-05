@@ -13,9 +13,14 @@ public class OAuth2UserProfile {
 
     private final String username;
 
+    private final String email;
+    private final String slackId;
+
     public User toUser() {
         return User.builder()
                 .username(this.username)
+                .email(this.email)
+                .slackId(this.slackId)
                 .role(Role.ROLE_USER)
                 .benefitPoint(0)
                 .penaltyPoint(0)

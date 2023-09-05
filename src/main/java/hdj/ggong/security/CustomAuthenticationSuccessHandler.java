@@ -6,6 +6,7 @@ import hdj.ggong.repository.UserRepository;
 import hdj.ggong.security.jwt.CookieUtils;
 import hdj.ggong.security.jwt.JwtProvider;
 import hdj.ggong.security.oauth2.OAuth2UserProfile;
+import hdj.ggong.slack.SlackService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,17 +27,21 @@ import java.util.Map;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final JwtProvider jwtProvider;
     private final CookieUtils cookieUtils;
+    private final SlackService slackService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-
+        String username = (String) attributes.get("login");
+        String email = (String) attributes.get("email");
+        String slackId = slackService.getUserIdByEmail(email);
         OAuth2UserProfile oAuth2UserProfile = OAuth2UserProfile.builder()
-                .username((String) attributes.get("login"))
+                .username(username)
+                .email(email)
+                .slackId(slackId)
                 .build();
         User user = userRepository.findByUsername(oAuth2UserProfile.getUsername())
                 .orElseGet(() -> userRepository.save(oAuth2UserProfile.toUser()));
