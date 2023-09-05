@@ -22,6 +22,9 @@ repositories {
 }
 
 dependencies {
+	// Slack bot
+	implementation 'com.slack.api:slack-api-client:1.31.0'
+
 	// Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 

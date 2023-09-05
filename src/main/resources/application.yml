@@ -1,4 +1,4 @@
 spring:
   profiles:
     active: dev
-    include: oauth, jwt
+    include: oauth, jwt, slack
