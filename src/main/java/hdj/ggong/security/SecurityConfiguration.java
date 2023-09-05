@@ -29,7 +29,6 @@ public class SecurityConfiguration {
 
     private final OAuth2Service oAuth2Service;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionFilter jwtExceptionFilter;
 
@@ -49,7 +48,6 @@ public class SecurityConfiguration {
                                 .userService(oAuth2Service)
                         )
                         .successHandler(customAuthenticationSuccessHandler)
-                        .failureHandler(customAuthenticationFailureHandler)
                 );
 
         http

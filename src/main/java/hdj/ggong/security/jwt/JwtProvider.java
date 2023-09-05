@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-@Slf4j
 @Component
 public class JwtProvider {
 
@@ -59,7 +58,6 @@ public class JwtProvider {
     public String getBearerTokenFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.contains("Bearer ")) {
-            log.error("Not bearer authentication");
             return "";
         }
         return authorizationHeader.substring(6).trim();
